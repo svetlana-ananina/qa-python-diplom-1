@@ -53,7 +53,7 @@ def setup_filling():
     mock_filling.return_value.get_price = FILLING_PRICE
     return mock_filling
 
-@allure.step('Создаем бургер с 6 мок-ингредиентами')
+@allure.title('Создаем бургер с 6 мок-ингредиентами')
 @pytest.fixture
 def get_burger_with_6_ingredients(setup_sauce, setup_filling):
     # создаем бургер

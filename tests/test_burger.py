@@ -3,7 +3,8 @@ import pytest
 from unittest.mock import Mock, patch
 
 from burger import Burger
-from data import BUN_NAME, BUN_PRICE, BUN2_NAME, BUN2_PRICE, SAUCE_TYPE, SAUCE_NAME, SAUCE_PRICE, FILLING_TYPE, FILLING_PRICE
+from data import BUN_NAME, BUN_PRICE, BUN2_NAME, BUN2_PRICE, SAUCE_TYPE, SAUCE_NAME, SAUCE_PRICE, FILLING_TYPE, \
+    FILLING_NAME, FILLING_PRICE
 
 
 class TestBurger:
@@ -55,10 +56,10 @@ class TestBurger:
 
     @allure.title('Проверяем метод add_ingredient() - добавление ингредиентов: 2 ингредиента')
     @pytest.mark.parametrize('ingredient1_type, ingredient2_type', [
-        [SAUCE_TYPE, FILLING_TYPE],         # соус и начинка
-        [FILLING_TYPE, SAUCE_TYPE],         # начинка и соус
-        [SAUCE_TYPE, SAUCE_TYPE],           # 2 соуса
-        [FILLING_TYPE, FILLING_TYPE]        # 2 начинки
+        [SAUCE_TYPE, FILLING_TYPE],  # соус и начинка
+        [FILLING_TYPE, SAUCE_TYPE],  # начинка и соус
+        [SAUCE_TYPE, SAUCE_TYPE],  # 2 соуса
+        [FILLING_TYPE, FILLING_TYPE]  # 2 начинки
     ])
     def test_add_ingredient_two_ingredients(self, setup_sauce, setup_filling,
                                             ingredient1_type, ingredient2_type):
@@ -149,7 +150,8 @@ class TestBurger:
     #
     # Тесты метода move_ingredient() - перемещение ингредиента
     #
-    @allure.title('Проверяем метод move_ingredient() - перемещение ингредиента: 2 ингредиента в списке, поменять индексы')
+    @allure.title(
+        'Проверяем метод move_ingredient() - перемещение ингредиента: 2 ингредиента в списке, поменять индексы')
     @pytest.mark.parametrize('index_before, index_after', [[0, 1], [1, 0]])
     def test_move_ingredient_move_1_and_2(self, setup_sauce, setup_filling, index_before, index_after):
         # создаем бургер и 2 ингредиента и добавляем их (с индексами 0 и 1)
@@ -215,22 +217,72 @@ class TestBurger:
     @patch('burger.Bun')
     @patch('burger.Ingredient')
     @pytest.mark.parametrize('has_buns, has_sauce, has_filling, has_price', [
-        [True, True, True, 400],        # булки и 2 ингредиента
-        [True, False, False, 100],      # только булки
-        [True, True, False, 200],       # булки и соус
-        [False, True, False, 100],      # только соус без булок
-        [False, False, False, 0]        # "пустой" бургер - без булок и ингредиентов
+        [True, True, True, 400],  # булки и 2 ингредиента
+        [True, False, False, 100],  # только булки
+        [True, True, False, 200],  # булки и соус
+        [False, True, False, 100],  # только соус без булок
+        [False, False, False, 0]  # "пустой" бургер - без булок и ингредиентов
     ])
-    def test_get_price(self, mock_bun, mock_ingredient,
+    def test_get_price(self, mock_bun_class, mock_ingredient_class,
                        has_buns, has_sauce, has_filling, has_price):
+        # создаем моки для булок и ингредиентов
+        # назначаем возвращаемое значение мокам для метода get_price()
         mock_bun = Mock()
+        mock_bun.get_price.return_value = BUN_PRICE
+        mock_sauce = Mock()
+        mock_sauce.get_price.return_value = SAUCE_PRICE
+        mock_filling = Mock()
+        mock_filling.get_price.return_value = FILLING_PRICE
+        # создаем бургер и добавляем в него булки и ингредиенты
+        burger = Burger()
+        if has_buns:
+            burger.set_buns(mock_bun)
+        if has_sauce:
+            burger.add_ingredient(mock_sauce)
+        if has_filling:
+            burger.add_ingredient(mock_filling)
+
+        # проверяем, что метод get_price() возвращает правильную стоимость
+        assert burger.get_price() == has_price
+
+    #
+    # Тесты метода get_receipt() - получение рецепта бургера
+    #
+    @allure.title('Проверяем метод get_receipt() - получение рецепта бургера')
+    @patch('burger.Bun')
+    @patch('burger.Ingredient')
+    #@patch('burger.Burger.get_price', return_value=500)
+    @patch('burger.Burger.get_price')
+    @pytest.mark.parametrize('has_buns, has_sauce, has_filling, has_price', [
+        [True, True, True, 500]  # булки и 2 ингредиента
+        # [True, False, False, 600],      # только булки
+        # [True, True, False, 700],       # булки и соус
+        # [False, True, False, 800],      # только соус без булок
+        # [False, False, False, 1000]        # "пустой" бургер - без булок и ингредиентов
+    ])
+    def test_get_receipt(self, mock_bun_class, mock_ingredient_class,
+                         mock_burger_get_price,
+                         setup_bun, setup_sauce, setup_filling,
+                         has_buns, has_sauce, has_filling, has_price):
+        # создаем моки для булок и ингредиентов
+        # назначаем возвращаемое значение мокам для методов get_name() и get_type()
+        mock_bun = Mock()
+        mock_bun.get_name.return_value = BUN_NAME
         mock_bun.get_price.return_value = BUN_PRICE
 
         mock_sauce = Mock()
+        mock_sauce.get_type.return_value = SAUCE_TYPE
+        mock_sauce.get_name.return_value = SAUCE_NAME
         mock_sauce.get_price.return_value = SAUCE_PRICE
 
         mock_filling = Mock()
+        mock_filling.get_type.return_value = FILLING_TYPE
+        mock_filling.get_name.return_value = FILLING_NAME
         mock_filling.get_price.return_value = FILLING_PRICE
+
+        # создаем мок для метода get_price() для бургера
+        # mock_burger_get_price.return_value = has_price
+        mock_burger_get_price.return_value = 1000
 
         burger = Burger()
         if has_buns:
@@ -239,5 +291,8 @@ class TestBurger:
             burger.add_ingredient(mock_sauce)
         if has_filling:
             burger.add_ingredient(mock_filling)
-        assert burger.get_price() == has_price
 
+        # получаем рецепт
+        receipt = burger.get_receipt()
+
+        print('\n', receipt, '\n')
