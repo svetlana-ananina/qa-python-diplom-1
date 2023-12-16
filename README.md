@@ -21,4 +21,12 @@
 
 **Запуск автотестов и создание HTML-отчета о покрытии**
 
->  `$ pytest --cov=praktikum --cov-report=html`
+>  `$ pytest --cov --cov-branch --cov-report=html`
+
+**Запуск автотестов с генерацией отчета Allure выполняется командой**
+
+>  `$ pytest -v ./tests  --alluredir=allure_results`
+
+**Просмотр отчета Allure выполняется командой**
+
+>  `$ allure serve allure_results`
