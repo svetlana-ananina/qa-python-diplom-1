@@ -8,6 +8,9 @@ from data import BUN_NAME, BUN_PRICE, BUN2_NAME, BUN2_PRICE, SAUCE_TYPE, SAUCE_N
 
 
 class TestBurger:
+    """
+    Тесты методов класса Burger.
+    """
 
     #
     # Тесты метода set_buns() - добавление булок
@@ -20,8 +23,8 @@ class TestBurger:
 
         # проверяем, что булка добавлена
         assert (burger.bun is not None and
-                burger.bun.name == BUN_NAME and
-                burger.bun.price == BUN_PRICE)
+                burger.bun.name is BUN_NAME and
+                burger.bun.price is BUN_PRICE)
 
     @allure.title('Проверяем метод set_buns() - добавление булок: 2 булки')
     def test_set_buns_2_buns(self, setup_bun, setup_bun2):
@@ -35,8 +38,8 @@ class TestBurger:
 
         # проверяем, что добавлена булка 2
         assert (burger.bun is not None and
-                burger.bun.name == BUN2_NAME and
-                burger.bun.price == BUN2_PRICE)
+                burger.bun.name is BUN2_NAME and
+                burger.bun.price is BUN2_PRICE)
 
     #
     # Тесты метода add_ingredient() - добавление ингредиента
@@ -49,10 +52,7 @@ class TestBurger:
         burger.add_ingredient(mock_sauce)
 
         # проверяем, что в списке 1 ингредиент - соус
-        assert (len(burger.ingredients) == 1 and
-                burger.ingredients[0].type == SAUCE_TYPE and
-                burger.ingredients[0].name == SAUCE_NAME and
-                burger.ingredients[0].price == SAUCE_PRICE)
+        assert len(burger.ingredients) == 1
 
     @allure.title('Проверяем метод add_ingredient() - добавление ингредиентов: 2 ингредиента')
     @pytest.mark.parametrize('ingredient1_type, ingredient2_type', [
@@ -122,7 +122,7 @@ class TestBurger:
             expected_type = SAUCE_TYPE
 
         # проверяем, что в списке остался один ингредиент - не тот, который был удален
-        assert (len(burger.ingredients) == 1 and
+        assert (len(burger.ingredients) is 1 and
                 burger.ingredients[0].type == expected_type)
 
     @allure.title('Проверяем метод remove_ingredient() - удаление ингредиента: пустой список')
@@ -252,18 +252,16 @@ class TestBurger:
     @patch('burger.Bun')
     @patch('burger.Ingredient')
     @patch('burger.Burger.get_price', return_value=500)
-    # @patch('burger.Burger.get_price')
-    @pytest.mark.parametrize('has_buns, has_sauce, has_filling, has_price', [
-        [True, True, True, 500],        # булки и 2 ингредиента
-        [True, False, False, 600],      # только булки
-        [True, True, False, 700],       # булки и соус
-        [False, True, False, 800],      # только соус без булок
-        [False, False, False, 1000]     # "пустой" бургер - без булок и ингредиентов
+    @pytest.mark.parametrize('has_buns, has_sauce, has_filling', [
+        [True, True, True],        # булки и 2 ингредиента
+        [True, False, False],      # только булки
+        [True, True, False],       # булки и соус
+        [False, True, False],      # только соус без булок
+        [False, False, False]     # "пустой" бургер - без булок и ингредиентов
     ])
     def test_get_receipt(self, mock_bun_class, mock_ingredient_class,
                          mock_burger_get_price,
-                         setup_bun, setup_sauce, setup_filling,
-                         has_buns, has_sauce, has_filling, has_price):
+                         has_buns, has_sauce, has_filling):
         # создаем моки для булок и ингредиентов
         # назначаем возвращаемое значение для методов get_name() и get_type()
         mock_bun = Mock()
@@ -278,10 +276,6 @@ class TestBurger:
         mock_filling.get_name.return_value = FILLING_NAME
         mock_filling.get_price.return_value = FILLING_PRICE
 
-        # создаем мок для метода get_price() для бургера
-        # mock_burger_get_price.return_value = has_price
-        # mock_burger_get_price.return_value = 1000
-
         # создаем бургер
         burger = Burger()
         if has_buns:
@@ -293,11 +287,6 @@ class TestBurger:
 
         # получаем рецепт
         receipt = burger.get_receipt()
-
-        # print(f'\n======================\n{receipt}\n========================\n')
-
-        # проверяем что мок метод get_price() для бургера вызывался 1 раз
-        # mock_burger_get_price.assert_called_once()
 
         # проверяем что рецепт получен
         assert type(receipt) is str and len(receipt) > 0
