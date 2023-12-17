@@ -251,30 +251,28 @@ class TestBurger:
     @allure.title('Проверяем метод get_receipt() - получение рецепта бургера')
     @patch('burger.Bun')
     @patch('burger.Ingredient')
-    #@patch('burger.Burger.get_price', return_value=500)
-    @patch('burger.Burger.get_price')
+    @patch('burger.Burger.get_price', return_value=500)
+    # @patch('burger.Burger.get_price')
     @pytest.mark.parametrize('has_buns, has_sauce, has_filling, has_price', [
-        [True, True, True, 500]  # булки и 2 ингредиента
-        # [True, False, False, 600],      # только булки
-        # [True, True, False, 700],       # булки и соус
-        # [False, True, False, 800],      # только соус без булок
-        # [False, False, False, 1000]        # "пустой" бургер - без булок и ингредиентов
+        [True, True, True, 500],        # булки и 2 ингредиента
+        [True, False, False, 600],      # только булки
+        [True, True, False, 700],       # булки и соус
+        [False, True, False, 800],      # только соус без булок
+        [False, False, False, 1000]     # "пустой" бургер - без булок и ингредиентов
     ])
     def test_get_receipt(self, mock_bun_class, mock_ingredient_class,
                          mock_burger_get_price,
                          setup_bun, setup_sauce, setup_filling,
                          has_buns, has_sauce, has_filling, has_price):
         # создаем моки для булок и ингредиентов
-        # назначаем возвращаемое значение мокам для методов get_name() и get_type()
+        # назначаем возвращаемое значение для методов get_name() и get_type()
         mock_bun = Mock()
         mock_bun.get_name.return_value = BUN_NAME
         mock_bun.get_price.return_value = BUN_PRICE
-
         mock_sauce = Mock()
         mock_sauce.get_type.return_value = SAUCE_TYPE
         mock_sauce.get_name.return_value = SAUCE_NAME
         mock_sauce.get_price.return_value = SAUCE_PRICE
-
         mock_filling = Mock()
         mock_filling.get_type.return_value = FILLING_TYPE
         mock_filling.get_name.return_value = FILLING_NAME
@@ -282,8 +280,9 @@ class TestBurger:
 
         # создаем мок для метода get_price() для бургера
         # mock_burger_get_price.return_value = has_price
-        mock_burger_get_price.return_value = 1000
+        # mock_burger_get_price.return_value = 1000
 
+        # создаем бургер
         burger = Burger()
         if has_buns:
             burger.set_buns(mock_bun)
@@ -295,4 +294,11 @@ class TestBurger:
         # получаем рецепт
         receipt = burger.get_receipt()
 
-        print('\n', receipt, '\n')
+        # print(f'\n======================\n{receipt}\n========================\n')
+
+        # проверяем что мок метод get_price() для бургера вызывался 1 раз
+        # mock_burger_get_price.assert_called_once()
+
+        # проверяем что рецепт получен
+        assert type(receipt) is str and len(receipt) > 0
+
