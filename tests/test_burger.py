@@ -288,6 +288,17 @@ class TestBurger:
         # получаем рецепт
         receipt = burger.get_receipt()
 
+        #print(f'\n===============================\n{receipt}\n===============================\n')
+
         # проверяем что рецепт получен
         assert type(receipt) is str and len(receipt) > 0
+        # проверяем что рецепт полный - указаны названия всех ингредиентов
+        receipt_is_full = True
+        if has_buns:
+            receipt_is_full = receipt_is_full and BUN_NAME in receipt
+        if has_sauce:
+            receipt_is_full = receipt_is_full and SAUCE_NAME in receipt
+        if has_filling:
+            receipt_is_full = receipt_is_full and FILLING_NAME in receipt
+        assert receipt_is_full
 
