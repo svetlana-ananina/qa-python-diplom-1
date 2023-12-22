@@ -223,7 +223,9 @@ class TestBurger:
         [False, True, False, 100],  # только соус без булок
         [False, False, False, 0]  # "пустой" бургер - без булок и ингредиентов
     ])
-    def test_get_price(self, mock_bun_class, mock_ingredient_class,
+    def test_get_price(self,
+                       mock_ingredient_class,
+                       mock_bun_class,
                        has_buns, has_sauce, has_filling, has_price):
         # создаем моки для булок и ингредиентов
         # назначаем возвращаемое значение мокам для метода get_price()
@@ -259,8 +261,10 @@ class TestBurger:
         [False, True, False],      # только соус без булок
         [False, False, False]     # "пустой" бургер - без булок и ингредиентов
     ])
-    def test_get_receipt(self, mock_bun_class, mock_ingredient_class,
+    def test_get_receipt(self,
                          mock_burger_get_price,
+                         mock_ingredient_class,
+                         mock_bun_class,
                          has_buns, has_sauce, has_filling):
         # создаем моки для булок и ингредиентов
         # назначаем возвращаемое значение для методов get_name() и get_type()
@@ -293,12 +297,13 @@ class TestBurger:
         # проверяем что рецепт получен
         assert type(receipt) is str and len(receipt) > 0
         # проверяем что рецепт полный - указаны названия всех ингредиентов
+        receipt = receipt.lower()
         receipt_is_full = True
         if has_buns:
-            receipt_is_full = receipt_is_full and BUN_NAME in receipt
+            receipt_is_full = receipt_is_full and BUN_NAME.lower() in receipt
         if has_sauce:
-            receipt_is_full = receipt_is_full and SAUCE_NAME in receipt
+            receipt_is_full = receipt_is_full and SAUCE_NAME.lower() in receipt
         if has_filling:
-            receipt_is_full = receipt_is_full and FILLING_NAME in receipt
+            receipt_is_full = receipt_is_full and FILLING_NAME.lower() in receipt
         assert receipt_is_full
 
