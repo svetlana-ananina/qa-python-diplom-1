@@ -15,8 +15,36 @@
   - `test_bun.py`
   - `test_ingredient.py`
   - `test_burger.py`
+  
+
 - `allure_results`     - папка с файлами allure-отчетов о тестировании
 - `htmlcov`            - папка с отчетом о покрытии (файл `index.html`)
+
+- `data.py`            - данные и константы для тестов
+- `conftest.py`        - фикстуры
+
+
+- `.gitignore`         - файл для проекта в Git/GinHub
+- `requirements.txt`   - файл внешних зависимостей
+- `README.md`          - файл с описанием проекта (этот файл)
+
+
+### Исходные файлы тестируемых классов:
+- `bun.py`
+- `burger.py`
+- `ingredient.py`
+- `ingredient_types.py`
+
+### Для запуска тестов должны быть установлены пакеты:
+- `pytest`
+- `unittest`
+- `allure-pytest`
+- `allure-python-commons`
+
+### Для генерации отчетов необходимо дополнительно установить пакеты:
+- `фреймворк JDK`
+- `Allure`
+- `pytest-cov`
 
 ### Запуск автотестов
 
