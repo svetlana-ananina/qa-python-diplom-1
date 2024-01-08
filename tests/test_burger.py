@@ -5,6 +5,7 @@ from unittest.mock import Mock, patch
 from burger import Burger
 from data import BUN_NAME, BUN_PRICE, BUN2_NAME, BUN2_PRICE, SAUCE_TYPE, SAUCE_NAME, SAUCE_PRICE, FILLING_TYPE, \
     FILLING_NAME, FILLING_PRICE
+from data import BURGER_GET_PRICE
 
 
 class TestBurger:
@@ -15,75 +16,102 @@ class TestBurger:
     #
     # Тесты метода set_buns() - добавление булок
     #
-    @allure.title('Проверяем метод set_buns - добавление булок: 1 булка')
+    @allure.title('set_buns() - добавление булок: 1 булка')
+    @allure.description('Проверяем, что булка добавлена')
     def test_set_buns(self, setup_bun):
+        """
+        Params: setup_bun - фикстура, которая возвращает мок булки
+        """
         burger = Burger()
-        mock_bun = setup_bun
-        burger.set_buns(mock_bun)
+        burger.set_buns(setup_bun)
 
         # проверяем, что булка добавлена
         assert (burger.bun is not None and
-                burger.bun.name is BUN_NAME and
-                burger.bun.price is BUN_PRICE)
+                burger.bun.name == BUN_NAME and
+                burger.bun.price == BUN_PRICE)
 
-    @allure.title('Проверяем метод set_buns() - добавление булок: 2 булки')
+
+    @allure.title('set_buns() - добавление булок: 2 булки')
+    @allure.description('Проверяем, что добавлена вторая булка')
     def test_set_buns_2_buns(self, setup_bun, setup_bun2):
+        """
+        Params: setup_bun, setup_bun2 - фикстуры, которые возвращают мок булок
+        """
         burger = Burger()
         # создаем и добавляем булку 1
-        mock_bun = setup_bun
-        burger.set_buns(mock_bun)
+        burger.set_buns(setup_bun)
         # создаем и добавляем булку 2
-        mock_bun2 = setup_bun2
-        burger.set_buns(mock_bun2)
+        burger.set_buns(setup_bun2)
 
         # проверяем, что добавлена булка 2
         assert (burger.bun is not None and
-                burger.bun.name is BUN2_NAME and
-                burger.bun.price is BUN2_PRICE)
+                burger.bun.name == BUN2_NAME and
+                burger.bun.price == BUN2_PRICE)
+
 
     #
     # Тесты метода add_ingredient() - добавление ингредиента
     #
-    @allure.title('Проверяем метод add_ingredient() - добавление ингредиентов: 1 ингредиент')
+    @allure.title('add_ingredient() - добавление ингредиентов: 1 ингредиент')
+    @allure.description('Проверяем, что в бургер добавлен 1 ингредиент - соус')
     def test_add_ingredient_one_ingredient(self, setup_sauce):
+        """
+        Params: setup_sauce - фикстура, которая возвращает мок ингредиента (соуса)
+        """
         burger = Burger()
         # создаем и добавляем 1 ингредиент - соус
-        mock_sauce = setup_sauce
-        burger.add_ingredient(mock_sauce)
+        burger.add_ingredient(setup_sauce)
 
-        # проверяем, что в списке 1 ингредиент - соус
+        # проверяем, что в списке 1 ингредиент
         assert len(burger.ingredients) == 1
 
-    @allure.title('Проверяем метод add_ingredient() - добавление ингредиентов: 2 ингредиента')
-    @pytest.mark.parametrize('ingredient1_type, ingredient2_type', [
-        [SAUCE_TYPE, FILLING_TYPE],  # соус и начинка
-        [FILLING_TYPE, SAUCE_TYPE],  # начинка и соус
-        [SAUCE_TYPE, SAUCE_TYPE],  # 2 соуса
-        [FILLING_TYPE, FILLING_TYPE]  # 2 начинки
-    ])
-    def test_add_ingredient_two_ingredients(self, setup_sauce, setup_filling,
-                                            ingredient1_type, ingredient2_type):
+
+    @allure.title('add_ingredient() - добавление ингредиентов: 2 соуса')
+    @allure.description('Проверяем, что в бургер можно добавить 2 соуса')
+    def test_add_ingredient_two_sauces(self, setup_sauce):
         burger = Burger()
-        # создаем 2 ингредиента - соус и начинка
-        mock_sauce = setup_sauce
-        mock_filling = setup_filling
         # Добавляем 1-й ингредиент
-        if ingredient1_type == SAUCE_TYPE:
-            burger.add_ingredient(mock_sauce)
-        else:
-            burger.add_ingredient(mock_filling)
+        burger.add_ingredient(setup_sauce)
         # Добавляем 2-й ингредиент
-        if ingredient2_type == SAUCE_TYPE:
-            burger.add_ingredient(mock_sauce)
-        else:
-            burger.add_ingredient(mock_filling)
+        burger.add_ingredient(setup_sauce)
 
-        # проверяем, что в списке 2 добавленных ингредиента
-        assert (len(burger.ingredients) == 2 and
-                burger.ingredients[0].type == ingredient1_type and
-                burger.ingredients[1].type == ingredient2_type)
+        # проверяем, что в списке 2 соуса
+        assert len(burger.ingredients) == 2
+        assert burger.ingredients[0].type == SAUCE_TYPE
+        assert burger.ingredients[1].type == SAUCE_TYPE
 
-    @allure.title('Проверяем метод add_ingredient() - добавление 6 ингредиентов: 3 соуса и 3 начинки')
+
+    @allure.title('add_ingredient() - добавление ингредиентов: 2 начинки')
+    @allure.description('Проверяем, что в бургер можно добавить 2 начинки')
+    def test_add_ingredient_two_fillings(self, setup_filling):
+        burger = Burger()
+        # Добавляем 1-й ингредиент
+        burger.add_ingredient(setup_filling)
+        # Добавляем 2-й ингредиент
+        burger.add_ingredient(setup_filling)
+
+        # проверяем, что в списке 2 соуса
+        assert len(burger.ingredients) == 2
+        assert burger.ingredients[0].type == FILLING_TYPE
+        assert burger.ingredients[1].type == FILLING_TYPE
+
+
+    @allure.title('add_ingredient() - добавление ингредиентов: соус и начинка')
+    @allure.description('Проверяем, что в бургер можно добавить соус и начинку')
+    def test_add_ingredient_sauce_and_filling(self, setup_sauce, setup_filling):
+        burger = Burger()
+        # Добавляем 1-й ингредиент
+        burger.add_ingredient(setup_sauce)
+        # Добавляем 2-й ингредиент
+        burger.add_ingredient(setup_filling)
+
+        # проверяем, что в списке 2 соуса
+        assert len(burger.ingredients) == 2
+        assert burger.ingredients[0].type == SAUCE_TYPE and burger.ingredients[1].type == FILLING_TYPE
+
+
+    @allure.title('add_ingredient() - добавление 6 ингредиентов: 3 соуса и 3 начинки')
+    @allure.description('Проверяем, что все ингредиенты добавлены')
     def test_add_ingredient_6_ingredients(self, setup_sauce, setup_filling, get_burger_with_6_ingredients):
         burger = get_burger_with_6_ingredients
         # проверяем, что в списке 6 ингредиентов
@@ -92,40 +120,50 @@ class TestBurger:
     #
     # Тесты метода remove_ingredient() - удаление ингредиента
     #
-    @allure.title('Проверяем метод remove_ingredient() - удаление ингредиента: 1 ингредиент в списке')
+    @allure.title('remove_ingredient() - удаление ингредиента: 1 ингредиент в списке')
+    @allure.description('Проверяем, что после удаления ингредиента список пустой')
     def test_remove_ingredient_one_ingredient_in_list(self, setup_sauce):
         # создаем бургер и добавляем 1 ингредиент - соус
         burger = Burger()
-        mock_sauce = setup_sauce
-        burger.add_ingredient(mock_sauce)
+        burger.add_ingredient(setup_sauce)
         # удаляем ингредиент
         burger.remove_ingredient(0)
 
         # проверяем, что список пустой
         assert len(burger.ingredients) == 0
 
-    @allure.title('Проверяем метод remove_ingredient() - удаление ингредиента: 2 ингредиента в списке')
-    @pytest.mark.parametrize('index', [0, 1])
-    def test_remove_ingredient_two_ingredients_in_list(self, setup_sauce, setup_filling, index):
+    @allure.title('remove_ingredient() - удаление ингредиента: 2 ингредиента в списке, удаляем 1-й')
+    @allure.description('Проверяем, что остался 2-й ингредиент')
+    #@pytest.mark.parametrize('index', [0, 1])
+    def test_remove_ingredient_two_ingredients_remove_first(self, setup_sauce, setup_filling):
         burger = Burger()
-        # создаем 2 ингредиента - соус и начинка
-        mock_sauce = setup_sauce
-        mock_filling = setup_filling
         # добавляем 2 ингредиента - соус и начинка
-        burger.add_ingredient(mock_sauce)
-        burger.add_ingredient(mock_filling)
+        burger.add_ingredient(setup_sauce)
+        burger.add_ingredient(setup_filling)
         # удаляем ингредиент с индексом index (0 или 1)
-        burger.remove_ingredient(index)
-        if index is 0:
-            expected_type = FILLING_TYPE
-        else:
-            expected_type = SAUCE_TYPE
+        burger.remove_ingredient(0)
 
         # проверяем, что в списке остался один ингредиент - не тот, который был удален
-        assert (len(burger.ingredients) is 1 and
-                burger.ingredients[0].type == expected_type)
+        assert len(burger.ingredients) == 1
+        assert burger.ingredients[0].type == FILLING_TYPE
 
-    @allure.title('Проверяем метод remove_ingredient() - удаление ингредиента: пустой список')
+    @allure.title('remove_ingredient() - удаление ингредиента: 2 ингредиента в списке, удаляем 2-й')
+    @allure.description('Проверяем, что остался 1-й ингредиент')
+    def test_remove_ingredient_two_ingredients_remove_last(self, setup_sauce, setup_filling):
+        burger = Burger()
+        # добавляем 2 ингредиента - соус и начинка
+        burger.add_ingredient(setup_sauce)
+        burger.add_ingredient(setup_filling)
+        # удаляем ингредиент с индексом index (0 или 1)
+        burger.remove_ingredient(1)
+
+        # проверяем, что в списке остался один ингредиент - не тот, который был удален
+        assert len(burger.ingredients) == 1
+        assert burger.ingredients[0].type == SAUCE_TYPE
+
+
+    @allure.title('remove_ingredient() - удаление ингредиента: пустой список')
+    @allure.description('Проверяем, что список остался пустым')
     def test_remove_ingredient_empty_list_no_changes(self):
         burger = Burger()
         burger.remove_ingredient(0)
@@ -133,14 +171,13 @@ class TestBurger:
         # проверяем что программа не сломалась и список остался пустым
         assert len(burger.ingredients) == 0
 
-    @allure.title('Проверяем метод remove_ingredient() - удаление ингредиента: неправильный индекс')
+    @allure.title('remove_ingredient() - удаление ингредиента: неправильный индекс')
+    @allure.description('Проверяем, что программа не сломалась и в списке осталось 2 ингредиента')
     def test_remove_ingredient_invalid_index_no_changes(self, setup_sauce, setup_filling):
         # создаем бургер и 2 ингредиента и добавляем их (с индексами 0 и 1)
         burger = Burger()
-        mock_sauce = setup_sauce
-        mock_filling = setup_filling
-        burger.add_ingredient(mock_sauce)
-        burger.add_ingredient(mock_filling)
+        burger.add_ingredient(setup_sauce)
+        burger.add_ingredient(setup_filling)
         # пытаемся удалить ингредиент с индексом 2
         burger.remove_ingredient(2)
 
@@ -150,42 +187,40 @@ class TestBurger:
     #
     # Тесты метода move_ingredient() - перемещение ингредиента
     #
-    @allure.title(
-        'Проверяем метод move_ingredient() - перемещение ингредиента: 2 ингредиента в списке, поменять индексы')
+    @allure.title('move_ingredient() - перемещение ингредиента: 2 ингредиента в списке, поменять местами')
+    @allure.description('Проверяем, что')
     @pytest.mark.parametrize('index_before, index_after', [[0, 1], [1, 0]])
     def test_move_ingredient_move_1_and_2(self, setup_sauce, setup_filling, index_before, index_after):
         # создаем бургер и 2 ингредиента и добавляем их (с индексами 0 и 1)
         burger = Burger()
-        mock_sauce = setup_sauce
-        mock_filling = setup_filling
-        burger.add_ingredient(mock_sauce)
-        burger.add_ingredient(mock_filling)
+        burger.add_ingredient(setup_sauce)
+        burger.add_ingredient(setup_filling)
         # перемещаем ингредиент с индексом index_before на место index_after
         burger.move_ingredient(index_before, index_after)
 
         # проверяем что в списке осталось 2 элемента и они поменялись местами
-        assert (len(burger.ingredients) == 2 and
-                burger.ingredients[0].type == FILLING_TYPE and
-                burger.ingredients[1].type == SAUCE_TYPE)
+        assert len(burger.ingredients) == 2
+        assert burger.ingredients[0].type == FILLING_TYPE
+        assert burger.ingredients[1].type == SAUCE_TYPE
 
-    @allure.title('Проверяем метод move_ingredient() - перемещение ингредиента: 2 ингредиента, тот же индекс')
+    @allure.title('move_ingredient() - перемещение ингредиента: 2 ингредиента, тот же индекс')
+    @allure.description('Проверяем, что ингредиенты остались на тех же местах')
     @pytest.mark.parametrize('index', [0, 1])
     def test_move_ingredient_the_same_index(self, setup_sauce, setup_filling, index):
         # создаем бургер и 2 ингредиента и добавляем их (с индексами 0 и 1)
         burger = Burger()
-        mock_sauce = setup_sauce
-        mock_filling = setup_filling
-        burger.add_ingredient(mock_sauce)
-        burger.add_ingredient(mock_filling)
+        burger.add_ingredient(setup_sauce)
+        burger.add_ingredient(setup_filling)
         # перемещаем ингредиент с индексом index на то же место
         burger.move_ingredient(index, index)
 
         # проверяем что в списке остались 2 элемента на тех же местах
-        assert (len(burger.ingredients) == 2 and
-                burger.ingredients[0].type == SAUCE_TYPE and
-                burger.ingredients[1].type == FILLING_TYPE)
+        assert len(burger.ingredients) == 2
+        assert burger.ingredients[0].type == SAUCE_TYPE
+        assert burger.ingredients[1].type == FILLING_TYPE
 
-    @allure.title('Проверяем метод move_ingredient() -  перемещение ингредиента: пустой список')
+    @allure.title('move_ingredient() -  перемещение ингредиента: пустой список')
+    @allure.description('Проверяем, что программа не сломалась и список остался пустым')
     def test_move_ingredient_empty_list(self):
         # создаем бургер с пустым списком ингредиентов
         burger = Burger()
@@ -194,15 +229,14 @@ class TestBurger:
         # проверяем что программа не сломалась и список остался пустым
         assert len(burger.ingredients) == 0
 
-    @allure.title('Проверяем метод move_ingredient() -  перемещение ингредиента: неправильный индекс')
+    @allure.title('move_ingredient() -  перемещение ингредиента: неправильный индекс')
+    @allure.description('Проверяем, что программа не сломалась и в списке остались 2 ингредиента')
     @pytest.mark.parametrize('index_before, index_after', [[0, 2], [2, 1], [3, 5]])
     def test_move_ingredient_invalid_index(self, setup_sauce, setup_filling, index_before, index_after):
         # создаем бургер и 2 ингредиента и добавляем их (с индексами 0 и 1)
         burger = Burger()
-        mock_sauce = setup_sauce
-        mock_filling = setup_filling
-        burger.add_ingredient(mock_sauce)
-        burger.add_ingredient(mock_filling)
+        burger.add_ingredient(setup_sauce)
+        burger.add_ingredient(setup_filling)
 
         # перемещаем ингредиент с индексом index_before на место index_after
         burger.move_ingredient(index_before, index_after)
@@ -210,47 +244,123 @@ class TestBurger:
         # проверяем что программа не сломалась и в списке остались 2 ингредиента
         assert len(burger.ingredients) == 2
 
+
     #
     # Тесты метода get_price() - получение стоимости бургера
     #
-    @allure.title('Проверяем метод get_price() - получение стоимости бургера')
+    @allure.title('get_price() - получение стоимости бургера: булки и 2 ингредиента')
+    @allure.description('Проверяем, что метод возвращает правильную стоимость')
     @patch('burger.Bun')
     @patch('burger.Ingredient')
-    @pytest.mark.parametrize('has_buns, has_sauce, has_filling, has_price', [
-        [True, True, True, 400],  # булки и 2 ингредиента
-        [True, False, False, 100],  # только булки
-        [True, True, False, 200],  # булки и соус
-        [False, True, False, 100],  # только соус без булок
-        [False, False, False, 0]  # "пустой" бургер - без булок и ингредиентов
-    ])
-    def test_get_price(self,
+    # 1:    [True, True, True, 400]  # булки и 2 ингредиента
+    def test_get_price_with_buns_sauce_filling(self,
                        mock_ingredient_class,
-                       mock_bun_class,
-                       has_buns, has_sauce, has_filling, has_price):
+                       mock_bun_class):
         # создаем моки для булок и ингредиентов
-        # назначаем возвращаемое значение мокам для метода get_price()
         mock_bun = Mock()
-        mock_bun.get_price.return_value = BUN_PRICE
         mock_sauce = Mock()
-        mock_sauce.get_price.return_value = SAUCE_PRICE
         mock_filling = Mock()
+        # назначаем мокам возвращаемое значение для метода get_price()
+        mock_bun.get_price.return_value = BUN_PRICE
+        mock_sauce.get_price.return_value = SAUCE_PRICE
         mock_filling.get_price.return_value = FILLING_PRICE
         # создаем бургер и добавляем в него булки и ингредиенты
         burger = Burger()
-        if has_buns:
-            burger.set_buns(mock_bun)
-        if has_sauce:
-            burger.add_ingredient(mock_sauce)
-        if has_filling:
-            burger.add_ingredient(mock_filling)
+        burger.set_buns(mock_bun)
+        burger.add_ingredient(mock_sauce)
+        burger.add_ingredient(mock_filling)
 
         # проверяем, что метод get_price() возвращает правильную стоимость
-        assert burger.get_price() == has_price
+        assert burger.get_price() == BURGER_GET_PRICE.BUNS_SAUCE_FILLING_PRICE      # = 400
+
+
+    @allure.title('get_price() - получение стоимости бургера: только булки')
+    @allure.description('Проверяем, что программа не ломается и метод возвращает правильную стоимость')
+    @patch('burger.Bun')
+    @patch('burger.Ingredient')
+    # 2:    [True, False, False, 100],  # только булки
+    def test_get_price_with_buns(self,
+                       mock_ingredient_class,
+                       mock_bun_class):
+        # создаем мок для булок
+        mock_bun = Mock()
+        # назначаем моку возвращаемое значение для метода get_price()
+        mock_bun.get_price.return_value = BUN_PRICE
+        # создаем бургер и добавляем в него булки
+        burger = Burger()
+        burger.set_buns(mock_bun)
+
+        # проверяем, что метод get_price() возвращает правильную стоимость
+        assert burger.get_price() == BURGER_GET_PRICE.BUNS_PRICE      # = 100
+
+
+    @allure.title('get_price() - получение стоимости бургера: булки и соус')
+    @allure.description('Проверяем, что программа не ломается и метод возвращает правильную стоимость')
+    @patch('burger.Bun')
+    @patch('burger.Ingredient')
+    # 3:    [True, True, False, 200],  # булки и соус
+    def test_get_price_with_buns_and_sauce(self,
+                       mock_ingredient_class,
+                       mock_bun_class):
+        # создаем моки для булок и ингредиентов
+        mock_bun = Mock()
+        mock_sauce = Mock()
+        # назначаем мокам возвращаемое значение для метода get_price()
+        mock_bun.get_price.return_value = BUN_PRICE
+        mock_sauce.get_price.return_value = SAUCE_PRICE
+        # создаем бургер и добавляем в него булки и ингредиенты
+        burger = Burger()
+        burger.set_buns(mock_bun)
+        burger.add_ingredient(mock_sauce)
+
+        # проверяем, что метод get_price() возвращает правильную стоимость
+        assert burger.get_price() == BURGER_GET_PRICE.BUNS_SAUCE_PRICE      # = 200
+
+
+    @allure.title('get_price() - получение стоимости бургера')
+    @allure.description('Проверяем, что')
+    @patch('burger.Bun')
+    @patch('burger.Ingredient')
+    # 4:    [False, True, False, 100],  # только соус без булок
+    def test_get_price(self,
+                       mock_ingredient_class,
+                       mock_bun_class):
+        # создаем моки для булок и ингредиентов
+        mock_sauce = Mock()
+        # назначаем мокам возвращаемое значение для метода get_price()
+        mock_sauce.get_price.return_value = SAUCE_PRICE
+        # создаем бургер и добавляем в него булки и ингредиенты
+        burger = Burger()
+        burger.add_ingredient(mock_sauce)
+
+        # проверяем, что метод get_price() возвращает правильную стоимость
+        assert burger.get_price() == BURGER_GET_PRICE.SAUCE_PRICE      # = 100
+
+
+    @allure.title('get_price() - получение стоимости бургера')
+    @allure.description('Проверяем, что')
+    @patch('burger.Bun')
+    @patch('burger.Ingredient')
+    # 5:    [False, False, False, 0]  # "пустой" бургер - без булок и ингредиентов
+    def test_get_price(self,
+                       mock_ingredient_class,
+                       mock_bun_class):
+       # создаем бургер и добавляем в него булки и ингредиенты
+        burger = Burger()
+
+        # проверяем, что метод get_price() возвращает правильную стоимость
+        assert burger.get_price() == BURGER_GET_PRICE.EMPTY_BURGER_PRICE      # = 0
+
+
+
+
+
 
     #
     # Тесты метода get_receipt() - получение рецепта бургера
     #
     @allure.title('Проверяем метод get_receipt() - получение рецепта бургера')
+    @allure.description('Проверяем, что')
     @patch('burger.Bun')
     @patch('burger.Ingredient')
     @patch('burger.Burger.get_price', return_value=500)

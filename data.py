@@ -13,3 +13,12 @@ FILLING_PRICE = 200.0
 
 INGREDIENT_PRICE = 150.0
 
+
+class BURGER_GET_PRICE:
+
+    BUNS_SAUCE_FILLING_PRICE = 400          # булки и 2 ингредиента
+    BUNS_PRICE               = 100          # только булки
+    BUNS_SAUCE_PRICE         = 200          # булки и соус
+    SAUCE_PRICE              = 100          # только соус без булок
+    EMPTY_BURGER_PRICE       = 0            # "пустой" бургер - без булок и ингредиентов
+

@@ -59,19 +59,25 @@ def get_burger_with_6_ingredients(setup_sauce, setup_filling):
     # создаем бургер
     burger = Burger()
     # добавляем 3 соуса
-    mock_sauce1 = setup_sauce
-    burger.add_ingredient(mock_sauce1)
-    mock_sauce2 = setup_sauce
-    burger.add_ingredient(mock_sauce2)
-    mock_sauce3 = setup_sauce
-    burger.add_ingredient(mock_sauce3)
+    #mock_sauce1 = setup_sauce
+    #burger.add_ingredient(mock_sauce1)
+    burger.add_ingredient(setup_sauce)
+    #mock_sauce2 = setup_sauce
+    #burger.add_ingredient(mock_sauce2)
+    burger.add_ingredient(setup_sauce)
+    #mock_sauce3 = setup_sauce
+    #burger.add_ingredient(mock_sauce3)
+    burger.add_ingredient(setup_sauce)
     # добавляем 3 начинки
-    mock_filling1 = setup_filling
-    burger.add_ingredient(mock_filling1)
-    mock_filling2 = setup_filling
-    burger.add_ingredient(mock_filling2)
-    mock_filling3 = setup_filling
-    burger.add_ingredient(mock_filling3)
+    #mock_filling1 = setup_filling
+    #burger.add_ingredient(mock_filling1)
+    burger.add_ingredient(setup_filling)
+    #mock_filling2 = setup_filling
+    #burger.add_ingredient(mock_filling2)
+    burger.add_ingredient(setup_filling)
+    #mock_filling3 = setup_filling
+    #burger.add_ingredient(mock_filling3)
+    burger.add_ingredient(setup_filling)
     # возвращаем бургер
     return burger
 
