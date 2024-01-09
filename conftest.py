@@ -3,81 +3,69 @@ import pytest
 from unittest.mock import Mock
 
 from burger import Burger
-from data import BUN_NAME, BUN_PRICE, BUN2_NAME, BUN2_PRICE, SAUCE_TYPE, SAUCE_NAME, SAUCE_PRICE, FILLING_TYPE, FILLING_NAME, FILLING_PRICE
+from data import BURGER_GET_PRICE, BURGER_INFO as b
 
 
 @allure.title('Создаем мок булки')
 @pytest.fixture
-def setup_bun():
+def mock_bun():
     mock_bun = Mock()
-    mock_bun.name = BUN_NAME
-    mock_bun.price = BUN_PRICE
-    mock_bun.return_value.get_name = BUN_NAME
-    mock_bun.return_value.get_price = BUN_PRICE
+    mock_bun.name = b.BUN_NAME
+    mock_bun.price = b.BUN_PRICE
+    mock_bun.return_value.get_name = b.BUN_NAME
+    mock_bun.return_value.get_price = b.BUN_PRICE
     return mock_bun
 
 
 @allure.title('Создаем мок булки 2')
 @pytest.fixture
-def setup_bun2():
+def mock_bun2():
     mock_bun = Mock()
-    mock_bun.name = BUN2_NAME
-    mock_bun.price = BUN2_PRICE
-    mock_bun.return_value.get_name = BUN2_NAME
-    mock_bun.return_value.get_price = BUN2_PRICE
+    mock_bun.name = b.BUN2_NAME
+    mock_bun.price = b.BUN2_PRICE
+    mock_bun.return_value.get_name = b.BUN2_NAME
+    mock_bun.return_value.get_price = b.BUN2_PRICE
     return mock_bun
 
 
 @allure.title('Создаем мок соуса')
 @pytest.fixture
-def setup_sauce():
+def mock_sauce():
     mock_sauce = Mock()
-    mock_sauce.type = SAUCE_TYPE
-    mock_sauce.name = SAUCE_NAME
-    mock_sauce.price = SAUCE_PRICE
-    mock_sauce.return_value.get_type = SAUCE_TYPE
-    mock_sauce.return_value.get_name = SAUCE_NAME
-    mock_sauce.return_value.get_price = SAUCE_PRICE
+    mock_sauce.type = b.SAUCE_TYPE
+    mock_sauce.name = b.SAUCE_NAME
+    mock_sauce.price = b.SAUCE_PRICE
+    mock_sauce.return_value.get_type = b.SAUCE_TYPE
+    mock_sauce.return_value.get_name = b.SAUCE_NAME
+    mock_sauce.return_value.get_price = b.SAUCE_PRICE
     return mock_sauce
 
 
 @allure.title('Создаем мок начинки')
 @pytest.fixture
-def setup_filling():
+def mock_filling():
     mock_filling = Mock()
-    mock_filling.type = FILLING_TYPE
-    mock_filling.name = FILLING_NAME
-    mock_filling.price = FILLING_PRICE
-    mock_filling.return_value.get_type = FILLING_TYPE
-    mock_filling.return_value.get_name = FILLING_NAME
-    mock_filling.return_value.get_price = FILLING_PRICE
+    mock_filling.type = b.FILLING_TYPE
+    mock_filling.name = b.FILLING_NAME
+    mock_filling.price = b.FILLING_PRICE
+    mock_filling.return_value.get_type = b.FILLING_TYPE
+    mock_filling.return_value.get_name = b.FILLING_NAME
+    mock_filling.return_value.get_price = b.FILLING_PRICE
     return mock_filling
 
 @allure.title('Создаем бургер с 6 мок-ингредиентами')
 @pytest.fixture
-def get_burger_with_6_ingredients(setup_sauce, setup_filling):
+def get_burger_with_6_ingredients(mock_sauce, mock_filling):
     # создаем бургер
     burger = Burger()
     # добавляем 3 соуса
-    #mock_sauce1 = setup_sauce
-    #burger.add_ingredient(mock_sauce1)
-    burger.add_ingredient(setup_sauce)
-    #mock_sauce2 = setup_sauce
-    #burger.add_ingredient(mock_sauce2)
-    burger.add_ingredient(setup_sauce)
-    #mock_sauce3 = setup_sauce
-    #burger.add_ingredient(mock_sauce3)
-    burger.add_ingredient(setup_sauce)
+    burger.add_ingredient(mock_sauce)
+    burger.add_ingredient(mock_sauce)
+    burger.add_ingredient(mock_sauce)
     # добавляем 3 начинки
-    #mock_filling1 = setup_filling
-    #burger.add_ingredient(mock_filling1)
-    burger.add_ingredient(setup_filling)
-    #mock_filling2 = setup_filling
-    #burger.add_ingredient(mock_filling2)
-    burger.add_ingredient(setup_filling)
-    #mock_filling3 = setup_filling
-    #burger.add_ingredient(mock_filling3)
-    burger.add_ingredient(setup_filling)
+    burger.add_ingredient(mock_filling)
+    burger.add_ingredient(mock_filling)
+    burger.add_ingredient(mock_filling)
     # возвращаем бургер
     return burger
 
