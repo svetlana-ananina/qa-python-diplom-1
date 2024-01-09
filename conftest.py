@@ -3,7 +3,7 @@ import pytest
 from unittest.mock import Mock
 
 from burger import Burger
-from data import BURGER_GET_PRICE, BURGER_INFO as b
+from data import BurgerGetPrice as p, BurgerInfo as b
 
 
 @allure.title('Создаем мок булки')

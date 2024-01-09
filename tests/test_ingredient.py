@@ -2,7 +2,7 @@ import allure
 import pytest
 
 from ingredient import Ingredient
-from data import BURGER_INFO as b
+from data import BurgerInfo as b
 
 
 class TestIngredient:

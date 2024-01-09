@@ -2,7 +2,7 @@ import allure
 import pytest
 
 from bun import Bun
-from data import BURGER_INFO as b
+from data import BurgerInfo as b
 
 
 class TestBun:

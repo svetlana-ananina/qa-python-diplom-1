@@ -3,8 +3,7 @@ import pytest
 from unittest.mock import Mock, patch
 
 from burger import Burger
-from data import BURGER_GET_PRICE, BURGER_INFO as b
-from helpers import _print_info
+from data import BurgerGetPrice as p, BurgerInfo as b
 
 class TestBurger:
     """
@@ -278,7 +277,7 @@ class TestBurger:
         burger.add_ingredient(mock_filling)
 
         # проверяем, что метод get_price() возвращает правильную стоимость
-        assert burger.get_price() == BURGER_GET_PRICE.BUNS_SAUCE_FILLING_PRICE      # = 400
+        assert burger.get_price() == p.BUNS_SAUCE_FILLING_PRICE      # = 400
 
 
     @allure.title('get_price() - получение стоимости бургера: только булки')
@@ -298,7 +297,7 @@ class TestBurger:
         burger.set_buns(mock_bun)
 
         # проверяем, что метод get_price() возвращает правильную стоимость
-        assert burger.get_price() == BURGER_GET_PRICE.BUNS_PRICE      # = 100
+        assert burger.get_price() == p.BUNS_PRICE      # = 100
 
 
     @allure.title('get_price() - получение стоимости бургера: булки и соус')
@@ -321,7 +320,7 @@ class TestBurger:
         burger.add_ingredient(mock_sauce)
 
         # проверяем, что метод get_price() возвращает правильную стоимость
-        assert burger.get_price() == BURGER_GET_PRICE.BUNS_SAUCE_PRICE      # = 200
+        assert burger.get_price() == p.BUNS_SAUCE_PRICE      # = 200
 
 
     @allure.title('get_price() - получение стоимости бургера: только соус без булок')
@@ -341,7 +340,7 @@ class TestBurger:
         burger.add_ingredient(mock_sauce)
 
         # проверяем, что метод get_price() возвращает правильную стоимость
-        assert burger.get_price() == BURGER_GET_PRICE.SAUCE_PRICE      # = 100
+        assert burger.get_price() == p.SAUCE_PRICE      # = 100
 
 
     @allure.title('get_price() - получение стоимости бургера: "пустой" бургер - без булок и ингредиентов')
@@ -356,7 +355,7 @@ class TestBurger:
         burger = Burger()
 
         # проверяем, что метод get_price() возвращает правильную стоимость
-        assert burger.get_price() == BURGER_GET_PRICE.EMPTY_BURGER_PRICE      # = 0
+        assert burger.get_price() == p.EMPTY_BURGER_PRICE      # = 0
 
 
     #
@@ -392,7 +391,6 @@ class TestBurger:
         burger.add_ingredient(mock_filling)
         # получаем рецепт
         receipt = burger.get_receipt()
-        _print_info(f'\n===============================\n{receipt}\n===============================\n')
 
         # проверяем что рецепт получен
         assert type(receipt) is str
@@ -425,7 +423,6 @@ class TestBurger:
         burger.set_buns(mock_bun)
         # получаем рецепт
         receipt = burger.get_receipt()
-        _print_info(f'\n===============================\n{receipt}\n===============================\n')
 
         # проверяем что рецепт получен
         assert type(receipt) is str
@@ -461,7 +458,6 @@ class TestBurger:
         burger.add_ingredient(mock_sauce)
         # получаем рецепт
         receipt = burger.get_receipt()
-        _print_info(f'\n===============================\n{receipt}\n===============================\n')
 
         # проверяем что рецепт получен
         assert type(receipt) is str
@@ -494,7 +490,6 @@ class TestBurger:
         burger.add_ingredient(mock_sauce)
         # получаем рецепт
         receipt = burger.get_receipt()
-        _print_info(f'\n===============================\n{receipt}\n===============================\n')
 
         # проверяем что рецепт получен
         assert type(receipt) is str
@@ -521,7 +516,6 @@ class TestBurger:
         burger = Burger()
         # получаем рецепт
         receipt = burger.get_receipt()
-        _print_info(f'\n===============================\n{receipt}\n===============================\n')
 
         # проверяем что рецепт получен
         assert type(receipt) is str

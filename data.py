@@ -1,4 +1,4 @@
-class BURGER_INFO:
+class BurgerInfo:
     BUN_NAME = "black bun"
     BUN_PRICE = 50.0
     BUN2_NAME = "white bun"
@@ -16,10 +16,7 @@ class BURGER_INFO:
     BURGER_PRICE = 500
 
 
-_to_print = True
-#_to_print = False
-
-class BURGER_GET_PRICE:
+class BurgerGetPrice:
 
     BUNS_SAUCE_FILLING_PRICE = 400          # булки и 2 ингредиента
     BUNS_PRICE               = 100          # только булки
